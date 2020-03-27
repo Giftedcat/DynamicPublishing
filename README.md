@@ -238,6 +238,6 @@
         }
     }
 ```
-#四、关于老v7项目的问题
+# 四、关于老v7项目的问题
 前段时间也是刚把自己的项目从v7手动改为androidx的，忙活了半天，后来发现android studio有一键将v7项目改为新的androidx的项目，算是给自己记个笔记
 ![78M(FMFGHPU%CF1GDL_POBM.png](https://upload-images.jianshu.io/upload_images/20395467-72f05aa4782d0393.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
