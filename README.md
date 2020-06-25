@@ -1,5 +1,41 @@
 # Android仿微信朋友圈发布动态功能
 
+# 导入
+```
+implementation 'com.github.Giftedcat:DynamicPublishing:1.0.0'
+```
+# 使用
+#### （一）初始化
+```
+helpr = PictureUseHelpr.init(this).
+                setMaxNum(9).
+                origin(mSelect).
+                bindRecyclerView(rvImages, R.id.iv_thum);
+```
+#### （二）选择图片
+```
+helpr.pickImage(REQUEST_IMAGE);
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                List<String> select = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
+                mSelect.clear();
+                mSelect.addAll(select);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+```
+
+#### （三）显示大图
+```
+helpr.show(position);
+```
+
+
 # 一、前言
 
 应工作上的要求，需要有一个类似于微信朋友圈发动态上传图片的功能，想起曾经已经做过了，但奈何不忍看自己以前写的代码的惨状，觉得重新封装一个使用方便，易于维护的类似功能的类，自己之后用起来也顺手，当然也方便一下大家，这样可以加快我们工作的效率，让我们有更多的时间学习（划水）。
