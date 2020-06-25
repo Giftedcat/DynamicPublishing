@@ -8,8 +8,9 @@ import android.os.Bundle;
 
 import com.giftedcat.dynamic.activity.BaseActivity;
 import com.giftedcat.dynamic.adapter.NineGridAdapter;
-import com.giftedcat.dynamic.listener.OnAddPicturesListener;
-import com.giftedcat.easylib.selector.MultiImageSelector;
+import com.giftedcat.dynamic.listener.OnPicturesClickListener;
+import com.giftedcat.picture.lib.PictureUseHelpr;
+import com.giftedcat.picture.lib.selector.MultiImageSelector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,6 @@ import butterknife.Unbinder;
 public class MainActivity extends BaseActivity {
 
     private static final int REQUEST_IMAGE = 2;
-    private int maxNum = 9;
 
     Unbinder unbinder;
 
@@ -32,6 +32,8 @@ public class MainActivity extends BaseActivity {
 
     List<String> mSelect;
 
+    PictureUseHelpr helpr;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,31 +43,27 @@ public class MainActivity extends BaseActivity {
 
         mSelect = new ArrayList<>();
         initView();
+        helpr = PictureUseHelpr.init(this).
+                setMaxNum(9).
+                origin(mSelect).
+                bindRecyclerView(rvImages, R.id.iv_thum);
     }
 
     private void initView() {
         rvImages.setLayoutManager(new GridLayoutManager(this, 3));
         adapter = new NineGridAdapter(MainActivity.this, mSelect, rvImages);
-        adapter.setMaxSize(maxNum);
         rvImages.setAdapter(adapter);
-        adapter.setOnAddPicturesListener(new OnAddPicturesListener() {
+        adapter.setOnAddPicturesListener(new OnPicturesClickListener() {
+            @Override
+            public void onClick(int position) {
+                helpr.show(position);
+            }
+
             @Override
             public void onAdd() {
-                pickImage();
+                helpr.pickImage(REQUEST_IMAGE);
             }
         });
-    }
-
-    /**
-     * 选择添加图片
-     */
-    private void pickImage() {
-        MultiImageSelector selector = MultiImageSelector.create(context);
-        selector.showCamera(true);
-        selector.count(maxNum);
-        selector.multi();
-        selector.origin(mSelect);
-        selector.start(instans, REQUEST_IMAGE);
     }
 
     @Override
