@@ -9,7 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.giftedcat.dynamic.R;
-import com.giftedcat.dynamic.listener.OnPicturesClickListener;
+import com.giftedcat.dynamic.listener.OnAddPicturesListener;
+import com.giftedcat.picture.lib.photoview.GlideImageLoader;
+import com.giftedcat.picture.lib.photoview.style.index.NumberIndexIndicator;
+import com.giftedcat.picture.lib.photoview.style.progress.ProgressBarIndicator;
+import com.giftedcat.picture.lib.photoview.transfer.TransferConfig;
+import com.giftedcat.picture.lib.photoview.transfer.Transferee;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -29,9 +34,13 @@ public class NineGridAdapter extends CommonAdapter<String> {
 
     private Context context;
 
-    OnPicturesClickListener listener;
+    OnAddPicturesListener listener;
 
     private int deletePosition;
+
+    protected Transferee transferee;
+
+    protected TransferConfig config;
 
     public NineGridAdapter(Context context, List<String> selectPath, RecyclerView rvImages) {
         super(context, R.layout.item_img, selectPath);
@@ -39,13 +48,36 @@ public class NineGridAdapter extends CommonAdapter<String> {
 
         selectPath.add("");
         initDeleteMenu();
+        initTransfer(rvImages);
+    }
+
+    /**
+     * 设置最大图片数量
+     * */
+    public void setMaxSize(int maxNum) {
+        config.setMax(maxNum);
     }
 
     /**
      * 设置点击添加按钮的监听
      */
-    public void setOnAddPicturesListener(OnPicturesClickListener listener) {
+    public void setOnAddPicturesListener(OnAddPicturesListener listener) {
         this.listener = listener;
+    }
+
+
+    /**
+     * 初始化大图查看控件
+     */
+    private void initTransfer(RecyclerView rvImages) {
+        transferee = Transferee.getDefault(context);
+        config = TransferConfig.build()
+                .setSourceImageList(getDatas())
+                .setProgressIndicator(new ProgressBarIndicator())
+                .setIndexIndicator(new NumberIndexIndicator())
+                .setImageLoader(GlideImageLoader.with(context.getApplicationContext()))
+                .setJustLoadHitImage(true)
+                .bindRecyclerView(rvImages, R.id.iv_thum);
     }
 
     /**
@@ -114,16 +146,17 @@ public class NineGridAdapter extends CommonAdapter<String> {
 
         @Override
         public void onClick(View view) {
-            if (listener == null)
-                return;
             switch (view.getId()) {
                 case R.id.iv_thum:
                     //点击图片
-                    listener.onClick(position);
+                    config.setNowThumbnailIndex(position);
+                    config.setSourceImageList(getDatas());
+                    transferee.apply(config).show();
                     break;
                 case R.id.iv_add:
                     //点击添加按钮
-                    listener.onAdd();
+                    if (listener != null)
+                        listener.onAdd();
                     break;
             }
         }

@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.giftedcat.dynamic.activity.BaseActivity;
 import com.giftedcat.dynamic.adapter.NineGridAdapter;
 import com.giftedcat.dynamic.listener.OnAddPicturesListener;
-import com.giftedcat.easylib.selector.MultiImageSelector;
+import com.giftedcat.picture.lib.selector.MultiImageSelector;
 
 import java.util.ArrayList;
 import java.util.List;
