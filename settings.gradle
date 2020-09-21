@@ -1,1 +1,1 @@
-include ':app', ':easylib'
+include ':app', ':pictureLibrary'
