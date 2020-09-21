@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
 
     NineGridAdapter adapter;
 
-    List<String> mSelect;
+    List<String> mSelectList;
 
 
     @Override
@@ -39,13 +39,13 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
 
-        mSelect = new ArrayList<>();
+        mSelectList = new ArrayList<>();
         initView();
     }
 
     private void initView() {
         rvImages.setLayoutManager(new GridLayoutManager(this, 3));
-        adapter = new NineGridAdapter(MainActivity.this, mSelect, rvImages);
+        adapter = new NineGridAdapter(MainActivity.this, mSelectList, rvImages);
         adapter.setMaxSize(maxNum);
         rvImages.setAdapter(adapter);
         adapter.setOnAddPicturesListener(new OnAddPicturesListener() {
@@ -57,14 +57,14 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 选择添加图片
+     * 选择需添加的图片
      */
     private void pickImage() {
         MultiImageSelector selector = MultiImageSelector.create(context);
         selector.showCamera(true);
         selector.count(maxNum);
         selector.multi();
-        selector.origin(mSelect);
+        selector.origin(mSelectList);
         selector.start(instans, REQUEST_IMAGE);
     }
 
@@ -74,8 +74,8 @@ public class MainActivity extends BaseActivity {
         if (requestCode == REQUEST_IMAGE) {
             if (resultCode == RESULT_OK) {
                 List<String> select = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
-                mSelect.clear();
-                mSelect.addAll(select);
+                mSelectList.clear();
+                mSelectList.addAll(select);
                 adapter.notifyDataSetChanged();
             }
         }
